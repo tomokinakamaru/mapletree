@@ -1,6 +1,7 @@
 # coding:utf-8
 
 import sys
+from .driver import run
 from .httpio import Request, Response
 from .exceptions import InvalidStatusCode, NotFound, MethodNotAllowed
 
@@ -9,6 +10,9 @@ class WSGIApp(object):
     def __init__(self, mapletree):
         self.request_route = mapletree.request_route
         self.exception_route = mapletree.exception_route
+
+    def run(self, host='localhost', port=5000):
+        run(self, host=host, port=port)
 
     def __call__(self, environ, start_response):
         try:

@@ -20,7 +20,7 @@ class Request(object):
         self._session = None
         self._pathparams = {}
 
-    def environ_copy(self):
+    def copy_environ(self):
         return copy.deepcopy(self._environ)
 
     def environ(self, key):

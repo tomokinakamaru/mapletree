@@ -35,8 +35,7 @@ def _(req):
 application = mt.wsgiapp()  # creating wsgi application
 
 if __name__ == '__main__':
-	import wsgidriver  # just a driving server for wsgi (https://github.com/tomokinakamaru/wsgidriver)
-	wsgidriver.run(application)  # start serving
+	application.run()
 
 ```
 

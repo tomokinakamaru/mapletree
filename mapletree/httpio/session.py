@@ -3,12 +3,13 @@
 import urllib
 import urlparse
 from .signing import Signing
+from .vdict import VDict
 
 
 _MSG_NO_SECRET_KEY = 'Session requires secret key (Session.set_secret_key)'
 
 
-class Session(dict):
+class Session(VDict):
     COOKIE_NAME = 'SESSION'
     _signing = None
 

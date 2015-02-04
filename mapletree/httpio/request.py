@@ -64,7 +64,7 @@ class Request(object):
 
     @property
     def query(self):
-        return self._environ['QUERY_STRING'] or ''
+        return self._environ['QUERY_STRING']
 
     @property
     def fieldstorage(self):

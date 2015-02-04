@@ -66,3 +66,16 @@ class MapleTree(object):
 
     def options(self, rule):
         return self.request(rule, 'OPTIONS')
+
+    def scan(self, pkg_name):
+        self._scan(import_module(pkg_name))
+
+    def _scan(self, pkg):
+        pkg_file = pkg.__file__
+        pkg_path = pkg_file.rstrip('/__init__.py').rstrip('/__init__.pyc')
+
+        for _, mname, is_pkg in iter_modules([pkg_path]):
+            m = import_module(pkg.__name__ + '.' + mname)
+
+            if is_pkg:
+                self._scan(m)

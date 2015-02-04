@@ -2,6 +2,7 @@
 
 from .route import ExceptionRoute, RequestRoute
 from .config import Config
+from .threadlocals import ThreadLocals
 from .wsgi import WSGIApp
 
 
@@ -10,6 +11,7 @@ class MapleTree(object):
         self._exception_route = ExceptionRoute()
         self._request_route = RequestRoute()
         self._config = Config()
+        self._threadlocals = ThreadLocals()
 
     def wsgiapp(self):
         return WSGIApp(self)
@@ -25,6 +27,10 @@ class MapleTree(object):
     @property
     def config(self):
         return self._config
+
+    @property
+    def threadlocals(self):
+        return self._threadlocals
 
     def exception(self, exc_cls):
         def _(f):

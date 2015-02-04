@@ -1,6 +1,7 @@
 # coding:utf-8
 
 from .route import ExceptionRoute, RequestRoute
+from .config import Config
 from .wsgi import WSGIApp
 
 
@@ -8,6 +9,7 @@ class MapleTree(object):
     def __init__(self):
         self._exception_route = ExceptionRoute()
         self._request_route = RequestRoute()
+        self._config = Config()
 
     def wsgiapp(self):
         return WSGIApp(self)
@@ -19,6 +21,10 @@ class MapleTree(object):
     @property
     def request_route(self):
         return self._request_route
+
+    @property
+    def config(self):
+        return self._config
 
     def exception(self, exc_cls):
         def _(f):

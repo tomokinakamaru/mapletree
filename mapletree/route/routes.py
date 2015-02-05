@@ -29,4 +29,4 @@ class RequestRoute(BaseRoute):
         return map(self.parse_wildcard, pathstr.split('/')[1:])
 
     def parse_wildcard(self, elem):
-        return WildcardLabel(elem[2:-1]) if elem.startswith('*') else elem
+        return WildcardLabel(elem[1:]) if elem.startswith(':') else elem

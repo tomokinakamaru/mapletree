@@ -3,7 +3,7 @@
 import threading
 
 
-class ThreadLocals(object):
+class ThreadLocal(object):
     def __init__(self):
         self._locals = threading.local()
         self._funcs = {}

@@ -21,6 +21,9 @@ class Case(object):
     def run(self, app):
         env = self.copy_environ()
         env.setdefault('wsgi.errors', sys.stdout)
+        env.setdefault('QUERY_STRING', '')
+        env.setdefault('CONTENT_TYPE', '')
+        env.setdefault('CONTENT_LENGTH', 0)
         setup_testing_defaults(env)
         start_response = StartResponse()
         body = app(env, start_response)

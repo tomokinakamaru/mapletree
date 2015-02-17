@@ -101,7 +101,7 @@ class Request(object):
 
             data = urlparse.parse_qs(self.http_header('cookie') or '')
             for k, v in data.items():
-                self._cookie[k] = v[0]
+                self._cookie[k.strip()] = v[0]
 
         return self._cookie
 

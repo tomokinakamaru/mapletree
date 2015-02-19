@@ -92,8 +92,9 @@ class Case(object):
         f_content_disposition = content_disposition + '  filename="{}"'
         f_content_type = 'Content-Type: {}'
 
+        lines = []
         for k, v in kwargs.items():
-            lines = ['--' + boundary]
+            lines.append('--' + boundary)
             if isinstance(v, file):
                 lines.append(f_content_disposition.format(k))
                 lines.append(f_content_type.format(mimetype_of(v.name)))

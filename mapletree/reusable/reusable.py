@@ -1,5 +1,7 @@
 # coding:utf-8
 
+from .routefunc import RouteFunc
+
 
 class Reusable(object):
     ROUTE_METHOD_PREFIX = 'route_'
@@ -61,19 +63,3 @@ class Reusable(object):
     @classmethod
     def patch(cls, path):
         return RouteFunc('patch', path)
-
-
-class RouteFunc(object):
-    def __init__(self, *args):
-        self._args = args
-
-    def __call__(self, f):
-        self._f = f
-        return self
-
-    def __get__(self, reusable, c=None):
-        def _(*args, **kwargs):
-            return self._f(reusable, *args, **kwargs)
-
-        reusable.routes[self._args] = _
-        return _

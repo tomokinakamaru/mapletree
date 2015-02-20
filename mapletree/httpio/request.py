@@ -6,6 +6,7 @@ import urlparse
 from json import loads as jsondecode
 from xml.dom.minidom import parseString as xmldecode
 from .session import Session
+from .vdict import VDict
 
 
 class Request(object):
@@ -18,7 +19,7 @@ class Request(object):
         self._json = None
         self._xml = None
         self._session = None
-        self._pathparams = {}
+        self._pathparams = None
 
     def copy_environ(self):
         return copy.deepcopy(self._environ)
@@ -63,7 +64,7 @@ class Request(object):
 
     @property
     def query(self):
-        return self._environ['QUERY_STRING'] or ''
+        return self._environ['QUERY_STRING']
 
     @property
     def fieldstorage(self):
@@ -78,7 +79,7 @@ class Request(object):
     @property
     def params(self):
         if self._params is None:
-            self._params = {}
+            self._params = VDict()
 
             data = urlparse.parse_qs(self.query)
             for k, v in data.items():
@@ -88,23 +89,26 @@ class Request(object):
 
     @property
     def pathparams(self):
+        if self._pathparams is None:
+            self._pathparams = VDict()
+
         return self._pathparams
 
     @property
     def cookie(self):
         if self._cookie is None:
-            self._cookie = {}
+            self._cookie = VDict()
 
             data = urlparse.parse_qs(self.http_header('cookie') or '')
             for k, v in data.items():
-                self._cookie[k] = v[0]
+                self._cookie[k.strip()] = v[0]
 
         return self._cookie
 
     @property
     def formdata(self):
         if self._formdata is None:
-            self._formdata = {}
+            self._formdata = VDict()
 
             if isinstance(self.fieldstorage.value, list):
                 for k in self.fieldstorage.keys():

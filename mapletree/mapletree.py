@@ -1,6 +1,10 @@
 # coding:utf-8
 
+from importlib import import_module
+from pkgutil import iter_modules
 from .route import ExceptionRoute, RequestRoute
+from .config import Config
+from .threadlocal import ThreadLocal
 from .wsgi import WSGIApp
 
 
@@ -8,6 +12,8 @@ class MapleTree(object):
     def __init__(self):
         self._exception_route = ExceptionRoute()
         self._request_route = RequestRoute()
+        self._config = Config()
+        self._threadlocal = ThreadLocal()
 
     def wsgiapp(self):
         return WSGIApp(self)
@@ -19,6 +25,14 @@ class MapleTree(object):
     @property
     def request_route(self):
         return self._request_route
+
+    @property
+    def config(self):
+        return self._config
+
+    @property
+    def threadlocal(self):
+        return self._threadlocal
 
     def exception(self, exc_cls):
         def _(f):
@@ -54,3 +68,16 @@ class MapleTree(object):
 
     def options(self, rule):
         return self.request(rule, 'OPTIONS')
+
+    def scan(self, pkg_name):
+        self._scan(import_module(pkg_name))
+
+    def _scan(self, pkg):
+        pkg_file = pkg.__file__
+        pkg_path = pkg_file.rstrip('/__init__.py').rstrip('/__init__.pyc')
+
+        for _, mname, is_pkg in iter_modules([pkg_path]):
+            m = import_module(pkg.__name__ + '.' + mname)
+
+            if is_pkg:
+                self._scan(m)

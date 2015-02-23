@@ -37,4 +37,4 @@ class Signing(object):
             return None
 
     def _create_signature(self, msg):
-        return hmac.new(self._secret_key, msg, self._hashing).hexdigest()
+        return hmac.new(self._secret_key, msg, self._hashing).digest()

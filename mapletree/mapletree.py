@@ -4,7 +4,7 @@ from importlib import import_module
 from pkgutil import iter_modules
 from .route import ExceptionRoute, RequestRoute
 from .config import Config
-from .threadlocal import ThreadLocal
+from .tss import ThreadSpecificStorage
 from .wsgi import WSGIApp
 
 
@@ -13,7 +13,7 @@ class MapleTree(object):
         self._exception_route = ExceptionRoute()
         self._request_route = RequestRoute()
         self._config = Config()
-        self._threadlocal = ThreadLocal()
+        self._tss = ThreadSpecificStorage()
 
     def wsgiapp(self):
         return WSGIApp(self)
@@ -31,8 +31,8 @@ class MapleTree(object):
         return self._config
 
     @property
-    def threadlocal(self):
-        return self._threadlocal
+    def tss(self):
+        return self._tss
 
     def exception(self, exc_cls):
         def _(f):

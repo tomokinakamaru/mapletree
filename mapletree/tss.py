@@ -3,18 +3,18 @@
 import threading
 
 
-class ThreadLocal(object):
+class ThreadSpecificStorage(object):
     def __init__(self):
-        self._locals = threading.local()
+        self._threadlocal = threading.local()
         self._funcs = {}
 
     def __getattr__(self, name):
-        if hasattr(self._locals, name):
-            return getattr(self._locals, name)
+        if hasattr(self._threadlocal, name):
+            return getattr(self._threadlocal, name)
 
         else:
             obj = self._funcs[name]()
-            setattr(self._locals, name, obj)
+            setattr(self._threadlocal, name, obj)
             return obj
 
     def __call__(self, f):

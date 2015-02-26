@@ -24,7 +24,7 @@ class Session(VDict):
         if cls._signing is None:
             raise Exception(_MSG_NO_SECRET_KEY)
 
-        msg = cls._signing.unsign(token or '') or ''
+        msg = cls._signing.unsign(token or '')
         data = urlparse.parse_qs(msg)
         for k, v in data.items():
             session[k] = v[0]

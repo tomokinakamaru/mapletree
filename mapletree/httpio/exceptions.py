@@ -7,3 +7,7 @@ class ValidationError(Exception):
 
 class InsufficientError(ValidationError):
     pass
+
+
+class InvalidSignature(Exception):
+    pass

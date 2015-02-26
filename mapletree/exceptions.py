@@ -1,6 +1,6 @@
 # coding:utf-8
 
-from .httpio import ValidationError, InsufficientError
+from .httpio import ValidationError, InsufficientError, InvalidSignature
 
 
 class NotFound(Exception):

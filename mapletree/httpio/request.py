@@ -15,7 +15,7 @@ class Request(object):
         self._fieldstorage = None
         self._params = None
         self._cookie = None
-        self._formdata = None
+        self._data = None
         self._json = None
         self._xml = None
         self._session = None
@@ -106,15 +106,15 @@ class Request(object):
         return self._cookie
 
     @property
-    def formdata(self):
-        if self._formdata is None:
-            self._formdata = VDict()
+    def data(self):
+        if self._data is None:
+            self._data = VDict()
 
             if isinstance(self.fieldstorage.value, list):
                 for k in self.fieldstorage.keys():
-                    self._formdata[k] = self.fieldstorage.getfirst(k)
+                    self._data[k] = self.fieldstorage.getfirst(k)
 
-        return self._formdata
+        return self._data
 
     @property
     def json(self):

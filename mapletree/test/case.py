@@ -85,7 +85,7 @@ class Case(object):
         io = StringIO(b)
         return self.environ('wsgi.input', io).clength(io.len)
 
-    def formdata(self, **kwargs):
+    def data(self, **kwargs):
         boundary = '----------boundarywsgitest' + str(random.random())
 
         content_disposition = 'Content-Disposition: form-data; name="{}"'

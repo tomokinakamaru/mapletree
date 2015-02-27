@@ -1,11 +1,18 @@
 # coding:utf-8
 
 import re
+from types import MethodType
 from .exceptions import ValidationError, InsufficientError
 
 
 class VDict(dict):
     REQUIRED = object()
+    _ext = {}
+
+    @classmethod
+    def extend(cls, f):
+        _ = lambda vd, key, default=cls.REQUIRED: vd.take(key, f, default)
+        setattr(cls, f.__name__, MethodType(_, None, cls))
 
     def take(self, key, f=None, default=REQUIRED):
         v = self.get(key, None)

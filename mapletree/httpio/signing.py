@@ -3,6 +3,7 @@
 import base64
 import hashlib
 import hmac
+from .exceptions import InvalidSignature
 
 
 class Signing(object):
@@ -23,7 +24,7 @@ class Signing(object):
                 if signature == self._create_signature(body):
                     return body
 
-        return None
+        raise InvalidSignature()
 
     def _encode(self, msg):
         return base64.urlsafe_b64encode(msg).rstrip('=')

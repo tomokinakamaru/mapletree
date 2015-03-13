@@ -3,7 +3,7 @@
 import threading
 
 
-class ThreadSpecificStorage(object):
+class ThreadSpecifics(object):
     def __init__(self):
         self._threadlocal = threading.local()
         self._funcs = {}

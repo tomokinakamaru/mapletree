@@ -4,7 +4,7 @@ import json
 from datetime import datetime
 from time import mktime
 from wsgiref.handlers import format_date_time
-from .session import Session
+from . import compat
 
 
 class Response(Exception):
@@ -22,7 +22,7 @@ class Response(Exception):
                 headerlist.append((k, e))
 
         start_response(status, headerlist)
-        return [self._body]
+        return compat.response_body(self._body)
 
     def error(self):
         raise self
@@ -70,19 +70,6 @@ class Response(Exception):
     def clear_cookie(self, k):
         return self.cookie(k, '', datetime.fromtimestamp(0))
 
-    def session(self, data, expires=None, domain=None, path='/', secure=False):
-        return self.cookie(
-            Session.COOKIE_NAME,
-            Session(data).encode(),
-            expires,
-            domain,
-            path,
-            secure
-        )
-
-    def clear_session(self):
-        return self.clear_cookie(Session.COOKIE_NAME)
-
     def json(self, **kwargs):
         return self.ctype('application/json').body(jsonencode(kwargs))
 
@@ -98,10 +85,13 @@ def jsondefault(obj):
     if isinstance(obj, datetime):
         return httpdate(obj)
 
-    if isinstance(obj, bytearray):
+    if isinstance(obj, (bytes, bytearray)):
         return str(obj)
 
-    return json.JSONEncoder.default(obj)
+    if isinstance(obj, set):
+        return [e for e in obj]
+
+    raise TypeError('{} is not JSON serializable'.format(obj))
 
 
 def httpdate(dt):

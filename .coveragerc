@@ -1,0 +1,9 @@
+[paths]
+source = mapletree
+
+[report]
+include = mapletree*
+omit = mapletree/driver.py
+
+[html]
+directory = .coverage-html

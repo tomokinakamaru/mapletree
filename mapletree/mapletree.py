@@ -1,73 +1,80 @@
 # coding:utf-8
 
+import os
+import sys
 from importlib import import_module
 from pkgutil import iter_modules
-from .route import ExceptionRoute, RequestRoute
+from .request import Request
+from .response import Response
 from .config import Config
-from .tss import ThreadSpecificStorage
-from .wsgi import WSGIApp
+from .driver import Driver
+from .exceptions import NoExceptionHandler, NotFound, MethodNotAllowed
+from .routetree import RequestTree, ExceptionTree
+from .threadspecifics import ThreadSpecifics
 
 
 class MapleTree(object):
     def __init__(self):
-        self._exception_route = ExceptionRoute()
-        self._request_route = RequestRoute()
+        self._request_tree = RequestTree()
+        self._exception_tree = ExceptionTree()
         self._config = Config()
-        self._tss = ThreadSpecificStorage()
+        self._thread_specifics = ThreadSpecifics()
 
-    def wsgiapp(self):
-        return WSGIApp(self)
+    def __call__(self, environ, start_response):
+        try:
+            request = Request(environ)
+
+            sys.stdout = request.environ('wsgi.errors')
+            sys.stderr = request.environ('wsgi.errors')
+
+            item, pathinfo = self._request_tree.match(request.path)
+
+            if item is None:
+                raise NotFound(request.method, request.path)
+
+            if request.method.lower() not in item:
+                raise MethodNotAllowed(request.method, request.path)
+
+            request.pathparams.update(pathinfo)
+            response = item[request.method.lower()](request)
+
+            return response(start_response)
+
+        except Response as response:
+            return response(start_response)
+
+        except Exception as exception:
+            handler = self._exception_tree.match(exception.__class__)
+            if handler is None:
+                raise NoExceptionHandler(exception.__class__)
+
+            response = handler(exception)
+            return response(start_response)
 
     @property
-    def exception_route(self):
-        return self._exception_route
+    def req(self):
+        return self._request_tree
 
     @property
-    def request_route(self):
-        return self._request_route
+    def exc(self):
+        return self._exception_tree
 
     @property
     def config(self):
         return self._config
 
     @property
-    def tss(self):
-        return self._tss
+    def thread(self):
+        return self._thread_specifics
 
-    def exception(self, exc_cls):
-        def _(f):
-            self._exception_route.set(exc_cls, f)
-            return f
+    def run(self, port=5000, background=False):
+        target = os.path.dirname(os.path.abspath(sys.argv[0]))
+        driver = Driver(self, port, target, 1)
+        if background:
+            driver.run_background()
 
-        return _
-
-    def request(self, rule, method):
-        def _(f):
-            self._request_route.setdefault(rule, {})[method] = f
-            return f
-
-        return _
-
-    def get(self, rule):
-        return self.request(rule, 'GET')
-
-    def post(self, rule):
-        return self.request(rule, 'POST')
-
-    def put(self, rule):
-        return self.request(rule, 'PUT')
-
-    def delete(self, rule):
-        return self.request(rule, 'DELETE')
-
-    def patch(self, rule):
-        return self.request(rule, 'PATCH')
-
-    def head(self, rule):
-        return self.request(rule, 'HEAD')
-
-    def options(self, rule):
-        return self.request(rule, 'OPTIONS')
+        else:
+            driver.run()
 
     def scan(self, pkg_name):
         self._scan(import_module(pkg_name))

@@ -7,3 +7,4 @@ __pycache__
 .coverage-html
 .tox
 *.egg-info
+_build

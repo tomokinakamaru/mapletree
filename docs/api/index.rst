@@ -3,7 +3,6 @@ API
 
 .. toctree::
 
-    mapletree.compat
     mapletree.config
     mapletree.driver
     mapletree.exceptions

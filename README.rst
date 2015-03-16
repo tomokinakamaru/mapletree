@@ -1,10 +1,11 @@
+=========
+MapleTree
+=========
+
 .. image:: https://travis-ci.org/tomokinakamaru/mapletree.svg?branch=master
     :target: https://travis-ci.org/tomokinakamaru/mapletree
     :alt: MapleTree Build
 
-=========
-MapleTree
-=========
 
 About
 =====
@@ -47,4 +48,4 @@ MapleTree is a WSGI application framework. Python2.7, 3.3, and 3.4 are supported
 Documentation
 =============
 
-Tutorial and documentations are available at `here <https://tomokinakamaru.github.io/mapletree>`
+Tutorial and documentations are available at `here <https://tomokinakamaru.github.io/mapletree>`_

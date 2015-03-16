@@ -13,5 +13,6 @@ Tutorial
     handleexc
     argvalidation2
     extvalidation
-    dynamicrouting
+    pathparams
     largerapp
+    reuse

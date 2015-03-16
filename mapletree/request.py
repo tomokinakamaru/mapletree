@@ -124,18 +124,18 @@ class Request(object):
 
 
 class VDict(dict):
-    REQUIRED = object()
+    _REQUIRED = object()
 
     @classmethod
     def validator(cls, f):
-        def _(vd, key, default=cls.REQUIRED):
+        def _(vd, key, default=cls._REQUIRED):
             return vd.take(key, f, default)
         setattr(cls, f.__name__, _)
 
-    def take(self, key, f=None, default=REQUIRED):
+    def take(self, key, f=None, default=_REQUIRED):
         v = self.get(key, None)
         if v is None:
-            if default is self.REQUIRED:
+            if default is self._REQUIRED:
                 raise InsufficientError(key)
 
             else:
@@ -152,21 +152,21 @@ class VDict(dict):
                 except Exception as e:
                     raise ValidationError(key, e)
 
-    def regex(self, key, expr, default=REQUIRED):
+    def regex(self, key, expr, default=_REQUIRED):
         s = self.take(key, None, default)
         if re.match(expr, s):
             return s
 
         raise ValidationError(key, 'invalid text')
 
-    def email_addr(self, key, default=REQUIRED):
+    def email_addr(self, key, default=_REQUIRED):
         return self.regex(key, r'[^@|\s]+@[^@]+\.[^@|\s]+', default=default)
 
-    def secure_password(self, key, default=REQUIRED):
+    def secure_password(self, key, default=_REQUIRED):
         reg = r'^(?=.{8,})(?=.*?[0-9]+)(?=.*?[a-z]+)(?=.*?[A-Z]+).+$'
         return self.regex(key, reg, default)
 
-    def date(self, key, default=REQUIRED):
+    def date(self, key, default=_REQUIRED):
         s = self.take(key, None, default)
         try:
             y = int(s[:4])
@@ -177,14 +177,14 @@ class VDict(dict):
         except (TypeError, ValueError):
             raise ValidationError(key, 'invalid date format')
 
-    def flag(self, key, default=REQUIRED):
+    def flag(self, key, default=_REQUIRED):
         i = self.int(key, default)
         if i in (0, 1):
             return i
 
         raise ValidationError(key, 'must be 0 or 1')
 
-    def int(self, key, default=REQUIRED):
+    def int(self, key, default=_REQUIRED):
         s = self.take(key, None, default)
         try:
             return int(s)
@@ -192,14 +192,14 @@ class VDict(dict):
         except (TypeError, ValueError):
             raise ValidationError(key, 'must be int')
 
-    def uint(self, key, default=REQUIRED):
+    def uint(self, key, default=_REQUIRED):
         i = self.int(key, default)
         if 0 <= i:
             return i
 
         raise ValidationError(key, 'must be a non-negative int')
 
-    def pint(self, key, default=REQUIRED):
+    def pint(self, key, default=_REQUIRED):
         i = self.int(key, default)
         if 0 < i:
             return i

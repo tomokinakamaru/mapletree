@@ -1,3 +1,5 @@
+.. _utility_tutorial_index:
+
 Utility Module Tutorial
 =======================
 

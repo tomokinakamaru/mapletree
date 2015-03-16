@@ -157,7 +157,7 @@ class VDict(dict):
         if re.match(expr, s):
             return s
 
-        raise ValidationError('invalid text')
+        raise ValidationError(key, 'invalid text')
 
     def email_addr(self, key, default=REQUIRED):
         return self.regex(key, r'[^@|\s]+@[^@]+\.[^@|\s]+', default=default)
@@ -175,14 +175,14 @@ class VDict(dict):
             return datetime.date(y, m, d)
 
         except (TypeError, ValueError):
-            raise ValidationError('invalid date format')
+            raise ValidationError(key, 'invalid date format')
 
     def flag(self, key, default=REQUIRED):
         i = self.int(key, default)
         if i in (0, 1):
             return i
 
-        raise ValidationError('must be 0 or 1')
+        raise ValidationError(key, 'must be 0 or 1')
 
     def int(self, key, default=REQUIRED):
         s = self.take(key, None, default)
@@ -190,18 +190,18 @@ class VDict(dict):
             return int(s)
 
         except (TypeError, ValueError):
-            raise ValidationError('must be int')
+            raise ValidationError(key, 'must be int')
 
     def uint(self, key, default=REQUIRED):
         i = self.int(key, default)
         if 0 <= i:
             return i
 
-        raise ValidationError('must be a non-negative int')
+        raise ValidationError(key, 'must be a non-negative int')
 
     def pint(self, key, default=REQUIRED):
         i = self.int(key, default)
         if 0 < i:
             return i
 
-        raise ValidationError('must be positive int')
+        raise ValidationError(key, 'must be positive int')

@@ -54,7 +54,7 @@ class Response(Exception):
         ls = ['{}={}'.format(k, v)]
 
         if expires is not None:
-            ls.append('expires={}'.format(httpdate(expires)))
+            ls.append('expires={}'.format(_httpdate(expires)))
 
         if domain is not None:
             ls.append('domain={}'.format(domain))
@@ -71,19 +71,19 @@ class Response(Exception):
         return self.cookie(k, '', datetime.fromtimestamp(0))
 
     def json(self, **kwargs):
-        return self.ctype('application/json').body(jsonencode(kwargs))
+        return self.ctype('application/json').body(_jsonencode(kwargs))
 
     def html(self, b):
         return self.ctype('text/html').body(b)
 
 
-def jsonencode(obj):
-    return json.dumps(obj, separators=(',', ':'), default=jsondefault)
+def _jsonencode(obj):
+    return json.dumps(obj, separators=(',', ':'), default=_jsondefault)
 
 
-def jsondefault(obj):
+def _jsondefault(obj):
     if isinstance(obj, datetime):
-        return httpdate(obj)
+        return _httpdate(obj)
 
     if isinstance(obj, (bytes, bytearray)):
         return str(obj)
@@ -94,7 +94,7 @@ def jsondefault(obj):
     raise TypeError('{} is not JSON serializable'.format(obj))
 
 
-def httpdate(dt):
+def _httpdate(dt):
     return format_date_time(mktime(dt.timetuple()))
 
 

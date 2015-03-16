@@ -2,7 +2,7 @@
 
 
 class RouteTree(object):
-    WILDCARD = object()
+    _WILDCARD = object()
 
     def __init__(self):
         self._item = None
@@ -31,8 +31,8 @@ class RouteTree(object):
             if head in self._subtrees:
                 return self._subtrees[head].find(tail, strict)
 
-            elif self.WILDCARD in self._subtrees:
-                label, rtree = self._subtrees[self.WILDCARD]
+            elif self._WILDCARD in self._subtrees:
+                label, rtree = self._subtrees[self._WILDCARD]
                 item, pathinfo = rtree.find(tail, strict)
                 pathinfo[label] = head
                 return item, pathinfo
@@ -52,7 +52,7 @@ class RouteTree(object):
 
             if head.startswith(':'):
                 default = (head[1:], self.__class__())
-                _, rtree = self._subtrees.setdefault(self.WILDCARD, default)
+                _, rtree = self._subtrees.setdefault(self._WILDCARD, default)
                 return rtree.update(tail, item, replace)
 
             else:
@@ -64,7 +64,7 @@ class RouteTree(object):
             yield [], self._item
 
         for k1, item1 in self._subtrees.items():
-            if k1 is self.WILDCARD:
+            if k1 is self._WILDCARD:
                 label, subtree = item1
                 for k2, item2 in subtree.items():
                     yield [':{}'.format(label)] + k2, item2

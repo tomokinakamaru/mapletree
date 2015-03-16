@@ -1,5 +1,5 @@
-mapletree.threadspecifics module
-================================
+mapletree.threadspecifics
+=========================
 
 .. automodule:: mapletree.threadspecifics
     :members:

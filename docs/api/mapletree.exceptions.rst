@@ -1,5 +1,5 @@
-mapletree.exceptions module
-===========================
+mapletree.exceptions
+====================
 
 .. automodule:: mapletree.exceptions
     :members:

@@ -1,5 +1,5 @@
-mapletree.driver module
-=======================
+mapletree.driver
+================
 
 .. automodule:: mapletree.driver
     :members:

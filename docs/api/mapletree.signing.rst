@@ -1,5 +1,5 @@
-mapletree.signing module
-========================
+mapletree.signing
+=================
 
 .. automodule:: mapletree.signing
     :members:

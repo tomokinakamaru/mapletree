@@ -1,5 +1,5 @@
-mapletree.response module
-=========================
+mapletree.response
+==================
 
 .. automodule:: mapletree.response
     :members:

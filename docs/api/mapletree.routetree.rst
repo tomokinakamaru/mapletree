@@ -1,5 +1,5 @@
-mapletree.routetree module
-==========================
+mapletree.routetree
+===================
 
 .. automodule:: mapletree.routetree
     :members:

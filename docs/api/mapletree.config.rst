@@ -1,5 +1,5 @@
-mapletree.config module
-=======================
+mapletree.config
+================
 
 .. automodule:: mapletree.config
     :members:

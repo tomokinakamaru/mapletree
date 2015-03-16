@@ -1,5 +1,5 @@
-mapletree.mapletree module
-==========================
+mapletree.mapletree
+===================
 
 .. automodule:: mapletree.mapletree
     :members:

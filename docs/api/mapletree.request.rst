@@ -1,5 +1,5 @@
-mapletree.request module
-========================
+mapletree.request
+=================
 
 .. automodule:: mapletree.request
     :members:

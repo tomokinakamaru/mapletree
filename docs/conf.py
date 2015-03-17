@@ -18,6 +18,7 @@ version = '0.6.1'
 release = '0.6.1'
 exclude_patterns = ['_build']
 pygments_style = 'sphinx'
+autodoc_member_order = 'groupwise'
 
 html_theme = 'sphinx_rtd_theme'
 html_theme_path = [sphinx_rtd_theme.get_html_theme_path()]

@@ -14,8 +14,8 @@ source_suffix = '.rst'
 master_doc = 'index'
 project = u'MapleTree'
 copyright = u'2015, TomokiNakamaru'
-version = '0.6'
-release = '0.6'
+version = '0.6.1'
+release = '0.6.1'
 exclude_patterns = ['_build']
 pygments_style = 'sphinx'
 

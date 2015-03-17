@@ -18,14 +18,14 @@ All you need to do is just write ``:`` in the path. Here is the sample codes.
     def _(req):
         """ Endpoint for /users/1, /users/abc, /users/ etc.
             Not for /users """
-        user_id = req.pathparams.pint('id')
+        user_id = req.pathparams.int_positive('id')
         return rsp().json(message='user id is {}'.format(user_id))
 
 
     @mt.req.get('/user/:uid/articles/:aid')
     def _(req):
-        uid = req.pathparams.pint('uid')
-        aid = req.pathparams.pint('aid')
+        uid = req.pathparams.int_positive('uid')
+        aid = req.pathparams.int_positive('aid')
 
         fmt = 'the content of airticle {} (owned by user {})'
         return rsp().body(fmt.format(uid, aid))

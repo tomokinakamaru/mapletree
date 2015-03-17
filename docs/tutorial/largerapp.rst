@@ -62,14 +62,14 @@ Write some codes in ``routes/users.py``. The codes below are just example, savin
 
     @mt.req.get('/users/:id')
     def _(req):
-        uid = req.pathparams.pint('uid')
+        uid = req.pathparams.int_positive('uid')
         return rsp().json(message='info of user {}'.format(uid))
 
 
     @mt.req.get('/users')
     def _(req):
         email = req.data.email_addr('email')
-        name = req.data.take('name', None, 'Anonymous')
+        name = req.data('name', default='Anonymous')
 
         fmt = 'created new user {}({})'
         return rsp().json(message=fmt.format(name, email))
@@ -77,7 +77,7 @@ Write some codes in ``routes/users.py``. The codes below are just example, savin
 
     @mt.req.delete('/users/:id')
     def _(req):
-        uid = req.pathparams.pint('uid')
+        uid = req.pathparams.int_positive('uid')
         return rsp().json(message='deleted user {}'.format(uid))
 
 

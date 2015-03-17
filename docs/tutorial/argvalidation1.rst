@@ -40,7 +40,7 @@ MapleTree give you a easy way to validate arguments.
 
     @mt.req.get('/content/mapletree')
     def _(req):
-        page = req.params.pint('page')  # pint stands for positive integer
+        page = req.params.int_positive('page')
         return rsp().body('content of page {}'.format(page))
 
 

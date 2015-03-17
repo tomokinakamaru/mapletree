@@ -1,4 +1,0 @@
-Signing
-=======
-
-Sorry, no documantation available yet...

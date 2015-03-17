@@ -136,5 +136,3 @@ Why 'shared.py'
 ---------------
 
 Why we cannot write the codes for creating instance of MapleTree in ``application.py``? The reason is that, if ``mt`` is created in ``application.py``, each route file (``routes/users.py``, ``routes/excs.py``) needs to import ``application.py``. However ``application.py`` also needs route files so there is an import loop.
-
-``shared.py`` seems a wasteful file. But in actual application building, you will write codes for ``mt.config`` and ``mt.thread``  (See :ref:`utility_tutorial_index`) in ``shared.py`` and it's going to contain more meaningful lines.

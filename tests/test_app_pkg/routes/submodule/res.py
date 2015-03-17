@@ -6,7 +6,7 @@ from test_app_pkg.shared import mt
 
 @mt.req.get('/html')
 def _(req):
-    return rsp().html('<html>{}</html>'.format(req.params.take('a')))
+    return rsp().html('<html>{}</html>'.format(req.params('a')))
 
 
 @mt.req.get('/location')

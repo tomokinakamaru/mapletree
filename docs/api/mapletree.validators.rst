@@ -1,7 +1,7 @@
-mapletree.exceptions 
+mapletree.validators 
 ===========================
 
-.. automodule:: mapletree.exceptions
+.. automodule:: mapletree.validators
     :members:
     :undoc-members:
     :show-inheritance:

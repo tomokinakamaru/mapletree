@@ -128,12 +128,9 @@ class ExceptionTree(RouteTree):
             self.update(path, item, True)
 
     def create_path(self, exc_cls):
-        return '/' + '/'.join(self._create_path(exc_cls))
-
-    def _create_path(self, exc_cls):
         if exc_cls is Exception:
             return []
 
         else:
             super_cls = exc_cls.__bases__[0]
-            return self._create_path(super_cls) + [exc_cls.__name__]
+            return self.create_path(super_cls) + [exc_cls.__name__]

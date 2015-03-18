@@ -25,24 +25,46 @@ class Request(object):
 
     @classmethod
     def validator(cls, f):
+        """ Alias to `VDict.validator`.
+
+        :param f: new validator function to add.
+        :type f: callable
+        """
         return VDict.validator(f)
 
     def environ(self, key):
+        """ Accessor for wsgi `environ`. Returns `None` for nonexistent key.
+
+        :param key: key to get.
+        :type key: str
+        """
         return self._environ.get(key)
 
     def http_header(self, name):
+        """ Accessor for `HTTP_*` header values.
+        Arg `name` is used as `'HTTP_' + name.upper()`.
+
+        :param name: key name
+        :type name: str
+        """
         return self._environ.get('HTTP_' + name.upper())
 
     @property
     def method(self):
+        """ Returns http method.
+        """
         return self._environ.get('REQUEST_METHOD')
 
     @property
     def path(self):
+        """ Returns requested path.
+        """
         return self._environ.get('PATH_INFO') or '/'
 
     @property
     def query(self):
+        """ Returns query string.
+        """
         return self._environ.get('QUERY_STRING')
 
     @property

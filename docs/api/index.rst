@@ -4,7 +4,6 @@ API
 .. toctree::
 
     mapletree.config
-    mapletree.driver
     mapletree.exceptions
     mapletree.mapletree
     mapletree.request

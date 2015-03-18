@@ -28,11 +28,11 @@ The codes we wrote were ...
 
     @mt.req.get('/content/mapletree')
     def _(req):
-        page = req.params.pint('page')
+        page = req.params.int_positive('page')
         return rsp().body('content of page {}'.format(page))
 
 
-``req.params.pint('page')`` raises ``ValidationError`` or ``InsufficientError`` if the value given as ``page`` is not a positive integer or does not provided. Let's add new lines to handle exceptions for this like below.
+``req.params.int_positive('page')`` raises ``ValidationError`` or ``InsufficientError`` if the value given as ``page`` is not a positive integer or does not provided. Let's add new lines to handle exceptions for this like below.
 
 .. sourcecode:: python
 
@@ -43,7 +43,9 @@ The codes we wrote were ...
     # wherever you want
     @mt.exc(ValidationError)
     def _(e):
-        return rsp().code(400).json(message=str(e))
+        key, val, err = e
+        msg = '`{}` is invalid for {} ({})'.format(val, key, err)
+        return rsp().code(400).json(message=msg)
 
 
     @mt.exc(InsufficientError)

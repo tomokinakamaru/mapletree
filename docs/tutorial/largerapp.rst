@@ -62,14 +62,14 @@ Write some codes in ``routes/users.py``. The codes below are just example, savin
 
     @mt.req.get('/users/:id')
     def _(req):
-        uid = req.pathparams.pint('uid')
+        uid = req.pathparams.int_positive('uid')
         return rsp().json(message='info of user {}'.format(uid))
 
 
     @mt.req.get('/users')
     def _(req):
         email = req.data.email_addr('email')
-        name = req.data.take('name', None, 'Anonymous')
+        name = req.data('name', default='Anonymous')
 
         fmt = 'created new user {}({})'
         return rsp().json(message=fmt.format(name, email))
@@ -77,7 +77,7 @@ Write some codes in ``routes/users.py``. The codes below are just example, savin
 
     @mt.req.delete('/users/:id')
     def _(req):
-        uid = req.pathparams.pint('uid')
+        uid = req.pathparams.int_positive('uid')
         return rsp().json(message='deleted user {}'.format(uid))
 
 
@@ -136,5 +136,3 @@ Why 'shared.py'
 ---------------
 
 Why we cannot write the codes for creating instance of MapleTree in ``application.py``? The reason is that, if ``mt`` is created in ``application.py``, each route file (``routes/users.py``, ``routes/excs.py``) needs to import ``application.py``. However ``application.py`` also needs route files so there is an import loop.
-
-``shared.py`` seems a wasteful file. But in actual application building, you will write codes for ``mt.config`` and ``mt.thread``  (See :ref:`utility_tutorial_index`) in ``shared.py`` and it's going to contain more meaningful lines.

@@ -53,21 +53,40 @@ class MapleTree(object):
 
     @property
     def req(self):
+        """ RequestTree instance, see detail at
+        `mapletree.routetree.RequestTree`.
+        """
         return self._request_tree
 
     @property
     def exc(self):
+        """ ExceptionTree instance, see detail at
+        `mapletree.routetree.ExceptionTree`.
+        """
         return self._exception_tree
 
     @property
     def config(self):
+        """ Config instance, see detail at `mapletree.config.Config`.
+        """
         return self._config
 
     @property
     def thread(self):
+        """ ThreadSpecifics instance, see detail at
+        `mapletree.threadspecifics.Threadspecifics`.
+        """
         return self._thread_specifics
 
     def run(self, port=5000, background=False):
+        """ Runs this application with builtin server for testing.
+        This is only for test usage, do not use in production stage.
+
+        :param port: port number
+        :param background: flag to run in background
+        :type port: int
+        :type background: bool
+        """
         target = os.path.dirname(os.path.abspath(sys.argv[0]))
         driver = Driver(self, port, target, 1)
         if background:
@@ -76,8 +95,13 @@ class MapleTree(object):
         else:
             driver.run()
 
-    def scan(self, pkg_name):
-        self._scan(import_module(pkg_name))
+    def scan(self, pkgname):
+        """ Scans package recursively and import all modules in it.
+
+        :param pkgname: full package name to load
+        :type pkgname: str
+        """
+        self._scan(import_module(pkgname))
 
     def _scan(self, pkg):
         pkg_file = pkg.__file__

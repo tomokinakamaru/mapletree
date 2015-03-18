@@ -7,5 +7,4 @@ MapleTree is a WSGI application framework. Python2.7, 3.3, and 3.4 are supported
     :maxdepth: 2
 
     tutorial/index
-    utilitytutorial/index
     api/index

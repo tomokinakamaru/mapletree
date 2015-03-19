@@ -36,5 +36,5 @@ setup(
     packages=find_packages(),
     platforms='any',
     url='http://github.com/tomokinakamaru/mapletree',
-    version='0.6.1',
+    version='0.6.2',
 )

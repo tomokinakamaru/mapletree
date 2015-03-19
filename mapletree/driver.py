@@ -21,6 +21,7 @@ class Driver(object):
         self.target = target
         self.interval = interval
         self.httpd = None
+        self.verbose = True
 
     def run_background(self):
         t = Thread(target=self._run_as_stub, args=(False, ))
@@ -35,7 +36,7 @@ class Driver(object):
             self._run_as_driver()
 
     def _run_as_driver(self):
-        print(': starting driver')
+        self.log('starting driver')
         stub_cmd = [sys.executable] + sys.argv + [self._STUB]
         while True:
             try:
@@ -46,7 +47,7 @@ class Driver(object):
                 break
 
     def _run_as_stub(self, filewatch=True):
-        print(': starting stub')
+        self.log('starting stub')
 
         self.httpd = make_server('localhost', self.port, self.app)
 
@@ -69,10 +70,14 @@ class Driver(object):
                     keep_watching = False
                     break
 
-        print(': detected changes')
+        self.log('detected changes')
         self.httpd.shutdown()
 
     def _target_files(self):
         for root, dirs, files in os.walk(self.target):
             for f in files:
                 yield os.path.join(root, f)
+
+    def log(self, msg):
+        if self.verbose:
+            print(': {}'.format(msg))

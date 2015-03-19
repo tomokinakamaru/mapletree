@@ -84,9 +84,9 @@ class RequestTree(RouteTree):
     def match(self, pathexpr):
         return self.find(self.create_path(pathexpr), True)
 
-    def merge(self, tree):
+    def merge(self, tree, prefix=''):
         for path, item in tree.items():
-            self.update(path, {}, False).update(item)
+            self.update(prefix + path, {}, False).update(item)
 
     def create_path(self, pathexpr):
         return pathexpr.lstrip('/').split('/')

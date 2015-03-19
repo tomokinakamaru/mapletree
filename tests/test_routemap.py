@@ -83,6 +83,7 @@ def test_non_strict():
 def test_requesttree_merge():
     rt1 = RequestTree()
     rt2 = RequestTree()
+    rt3 = RequestTree()
 
     @rt1.get('/test/test')
     def f1_1():
@@ -100,13 +101,18 @@ def test_requesttree_merge():
     def f2_2():
         pass
 
+    @rt3.get('/test/prefix')
+    def f3_1():
+        pass
+
     rt1.merge(rt2)
+    rt1.merge(rt3, '/prefix')
 
     ret = []
     for key, item in rt1.items():
         ret.append((key, item))
 
-    assert len(ret) == 4
+    assert len(ret) == 5
 
     item, pathinfo = rt1.match('/test/test/test1')
     assert item['get'] == f2_1
@@ -115,6 +121,10 @@ def test_requesttree_merge():
     item, pathinfo = rt1.match('/test/x/test2')
     assert item['get'] == f2_2
     assert pathinfo.get('test') == 'x'
+
+    item, pathinfo = rt1.match('/prefix/test/prefix')
+    assert item['get'] == f3_1
+    assert pathinfo == {}
 
 
 def test_exceptiontree_merge():

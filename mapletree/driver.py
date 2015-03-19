@@ -11,6 +11,10 @@ from threading import Thread
 class Driver(object):
     _STUB = '--mapletree-driver-stub'
 
+    @classmethod
+    def is_stub_proc(cls):
+        return cls._STUB in sys.argv
+
     def __init__(self, app, port, target, interval):
         self.app = app
         self.port = port
@@ -24,7 +28,7 @@ class Driver(object):
         t.start()
 
     def run(self):
-        if self._STUB in sys.argv:
+        if self.is_stub_proc():
             self._run_as_stub()
 
         else:

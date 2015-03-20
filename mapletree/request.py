@@ -27,7 +27,7 @@ class Request(object):
     def validator(cls, f):
         """ Alias to `VDict.validator`.
 
-        :param f: new validator function to add.
+        :param f: New validator function to add.
         :type f: callable
         """
         return VDict.validator(f)
@@ -35,7 +35,7 @@ class Request(object):
     def environ(self, key):
         """ Accessor for wsgi `environ`. Returns `None` for nonexistent key.
 
-        :param key: key to get.
+        :param key: Key to get.
         :type key: str
         """
         return self._environ.get(key)
@@ -44,31 +44,33 @@ class Request(object):
         """ Accessor for `HTTP_*` header values.
         Arg `name` is used as `'HTTP_' + name.upper()`.
 
-        :param name: key name
+        :param name: Key name
         :type name: str
         """
         return self._environ.get('HTTP_' + name.upper())
 
     @property
     def method(self):
-        """ Returns http method.
+        """ HTTP method.
         """
         return self._environ.get('REQUEST_METHOD')
 
     @property
     def path(self):
-        """ Returns requested path.
+        """ Requested path.
         """
         return self._environ.get('PATH_INFO') or '/'
 
     @property
     def query(self):
-        """ Returns query string.
+        """ Raw query string.
         """
         return self._environ.get('QUERY_STRING')
 
     @property
     def body(self):
+        """ String from `wsgi.input`.
+        """
         if self._body is None:
             if self._fieldstorage is not None:
                 raise ReadBodyTwiceError()
@@ -82,6 +84,8 @@ class Request(object):
 
     @property
     def fieldstorage(self):
+        """ `cgi.FieldStorage` from `wsgi.input`.
+        """
         if self._fieldstorage is None:
             if self._body is not None:
                 raise ReadBodyTwiceError()
@@ -95,6 +99,8 @@ class Request(object):
 
     @property
     def params(self):
+        """ Parsed query string.
+        """
         if self._params is None:
             self._params = VDict()
 
@@ -106,6 +112,8 @@ class Request(object):
 
     @property
     def pathparams(self):
+        """ Parameters in path.
+        """
         if self._pathparams is None:
             self._pathparams = VDict()
 
@@ -113,6 +121,8 @@ class Request(object):
 
     @property
     def cookie(self):
+        """ Cookie values.
+        """
         if self._cookie is None:
             self._cookie = VDict()
 
@@ -124,6 +134,8 @@ class Request(object):
 
     @property
     def data(self):
+        """ Values in request body.
+        """
         if self._data is None:
             self._data = VDict()
 
@@ -139,6 +151,8 @@ class Request(object):
 
     @property
     def json(self):
+        """ JSON parsed request body.
+        """
         if self._json is None:
             self._json = json.loads(self.body)
 
@@ -150,6 +164,8 @@ class VDict(dict):
 
     @classmethod
     def validator(cls, f):
+        """ Add a new validator to `VDict`.
+        """
         def _(vd, key, *args, **kwargs):
             default = kwargs.pop('default', cls._REQUIRED)
             return vd(key, f, args, kwargs, default)
@@ -157,6 +173,19 @@ class VDict(dict):
         setattr(cls, f.__name__, _)
 
     def __call__(self, key, f=None, args=(), kwargs={}, default=_REQUIRED):
+        """ Retrieves a value for key with validating and default value.
+
+        :param key: Key to retrieve.
+        :param f: Validator function.
+        :param args: Validator arguments.
+        :param kwargs: Validator keyword arguments.
+        :param default: Default value, `_REQUIRED` object if not specified.
+        :type key: str
+        :type f: callable
+        :type args: iterable
+        :type kwargs: mapping
+        :type default: object
+        """
         v = self.get(key, None)
         if v is None:
             if default is self._REQUIRED:
@@ -180,4 +209,5 @@ class VDict(dict):
 for key in dir(validators):
     if not key.startswith('_'):
         f = getattr(validators, key)
-        VDict.validator(f)
+        if hasattr(f, '__call__'):
+            VDict.validator(f)

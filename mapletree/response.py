@@ -25,13 +25,30 @@ class Response(Exception):
         return compat.response_body(self._body)
 
     def error(self):
+        """ Raises `self`. This is a shortcut method for exiting endpoint.
+        """
         raise self
 
     def code(self, c):
+        """ Sets status code.
+
+        :param c: Status code
+        :type c: int
+        """
         self._code = c
         return self
 
     def header(self, k, v, replace=True):
+        """ Sets header value. Replaces existing value if `replace` is True.
+        Otherwise create a list of existing values and `v`
+
+        :param k: Header key
+        :param v: Header value
+        :param replace: flag for setting mode.
+        :type k: str
+        :type v: str
+        :type replace: bool
+        """
         if replace:
             self._headers[k] = [v]
 
@@ -41,16 +58,46 @@ class Response(Exception):
         return self
 
     def body(self, b):
+        """ Sets response body.
+
+        :param b: Body string
+        :type b: str
+        """
         self._body = b
         return self
 
     def ctype(self, t):
+        """ Sets header value for `Content-Type`.
+
+        :param t: Content type
+        :type t: str
+        """
         return self.header('Content-Type', t)
 
     def location(self, l):
+        """ Sets header value for `Location` and sets status code 301.
+
+        :param l: Location
+        :type l: str
+        """
         return self.code(301).header('Location', l)
 
     def cookie(self, k, v, expires=None, domain=None, path='/', secure=False):
+        """ Sets cookie value.
+
+        :param k: Name for cookie value
+        :param v: Cookie value
+        :param expires: Cookie expiration date
+        :param domain: Cookie domain
+        :param path: Cookie path
+        :param secure: Flag for `https only`
+        :type k: str
+        :type v: str
+        :type expires: datetime.datetime
+        :type domain: str
+        :type path: str
+        :type secure: bool
+        """
         ls = ['{}={}'.format(k, v)]
 
         if expires is not None:
@@ -68,12 +115,28 @@ class Response(Exception):
         return self.header('Set-Cookie', '; '.join(ls), False)
 
     def clear_cookie(self, k):
+        """ Sets value to clear clients cookie.
+
+        :param k: Cookie name to clear
+        :type k: str
+        """
         return self.cookie(k, '', datetime.fromtimestamp(0))
 
     def json(self, **kwargs):
+        """ Sets content type `application/json` and
+        fills body with json encoded string.
+
+        :param kwargs: Values for body
+        :type kwargs: mapping
+        """
         return self.ctype('application/json').body(_jsonencode(kwargs))
 
     def html(self, b):
+        """ Sets content type `text/html` and body to `b`'.
+
+        :param b: HTML string
+        :type b: str
+        """
         return self.ctype('text/html').body(b)
 
 

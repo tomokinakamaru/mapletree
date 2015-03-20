@@ -11,3 +11,4 @@ API
     mapletree.routetree
     mapletree.signing
     mapletree.threadspecifics
+    mapletree.validators

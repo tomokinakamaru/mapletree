@@ -13,11 +13,10 @@ source_suffix = '.rst'
 master_doc = 'index'
 project = u'MapleTree'
 copyright = u'2015, TomokiNakamaru'
-version = '0.6.1'
-release = '0.6.1'
+version = '0.6.3'
+release = '0.6.3'
 exclude_patterns = ['_build']
 pygments_style = 'sphinx'
-autodoc_member_order = 'groupwise'
 
 html_static_path = ['_static']
 htmlhelp_basename = 'MapleTreedoc'

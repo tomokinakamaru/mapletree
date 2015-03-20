@@ -82,8 +82,8 @@ class MapleTree(object):
         """ Runs this application with builtin server for testing.
         This is only for test usage, do not use in production stage.
 
-        :param port: port number
-        :param background: flag to run in background
+        :param port: Port number
+        :param background: Flag to run in background
         :type port: int
         :type background: bool
         """
@@ -98,7 +98,7 @@ class MapleTree(object):
     def scan(self, pkgname):
         """ Scans package recursively and import all modules in it.
 
-        :param pkgname: full package name to load
+        :param pkgname: Full package name to load
         :type pkgname: str
         """
         self._scan(import_module(pkgname))

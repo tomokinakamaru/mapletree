@@ -9,6 +9,15 @@ class RouteTree(object):
         self._subtrees = {}
 
     def find(self, path, strict):
+        """ Finds items for `path`. If `strict` is true, this method
+        returns `None` when matching path is not found.
+        Otherwise, this returns the result item of prefix searching.
+
+        :param path: Path to find
+        :param strict: Searching mode
+        :type path: list
+        :type strict: bool
+        """
         item, pathinfo = self._find(path, strict)
 
         if item is None:
@@ -41,6 +50,16 @@ class RouteTree(object):
                 return None, {}
 
     def update(self, path, item, replace):
+        """ Updates item for `path` and returns the item.
+        Replaces existing item with `item` when `replace` is true
+
+        :param path: Path for item
+        :param item: New item
+        :param replace: Updating mode
+        :type path: list
+        :type item: object
+        :type replace: bool
+        """
         if len(path) == 0:
             if self._item is None or replace:
                 self._item = item
@@ -60,6 +79,8 @@ class RouteTree(object):
                 return rtree.update(tail, item, replace)
 
     def items(self):
+        """ Yield all keys and items.
+        """
         if self._item is not None:
             yield [], self._item
 
@@ -77,61 +98,118 @@ class RouteTree(object):
 class RequestTree(RouteTree):
     def __call__(self, method, pathexpr):
         def _(f):
-            self.update(self.create_path(pathexpr), {}, False)[method] = f
+            self.update(self._create_path(pathexpr), {}, False)[method] = f
             return f
         return _
 
     def match(self, pathexpr):
-        return self.find(self.create_path(pathexpr), True)
+        """ Returns matching item for `pathexpr`.
+
+        :param pathexpr: Path string
+        :type pathexpr: str
+        """
+        return self.find(self._create_path(pathexpr), True)
 
     def merge(self, tree, prefix=''):
-        prefix_path = self.create_path(prefix) if prefix else []
+        """ Merges all items in `tree` with prepending `prefix`.
+
+        :param tree: `RequestTree` to merge.
+        :param prefix: Prefix for keys
+        :type tree: mapletree.routetree.RequestTree
+        :type prefix: str
+        """
+        prefix_path = self._create_path(prefix) if prefix else []
         for path, item in tree.items():
             self.update(prefix_path + path, {}, False).update(item)
 
-    def create_path(self, pathexpr):
+    def _create_path(self, pathexpr):
         return pathexpr.lstrip('/').split('/')
 
     def get(self, pathexpr):
+        """ Update GET method item for `pathexpr`.
+
+        :param pathexpr: Path to update
+        :type pathexpr: str
+        """
         return self('get', pathexpr)
 
     def post(self, pathexpr):
+        """ Update POST method item for `pathexpr`.
+
+        :param pathexpr: Path to update
+        :type pathexpr: str
+        """
         return self('post', pathexpr)
 
     def put(self, pathexpr):
+        """ Update PUT method item for `pathexpr`.
+
+        :param pathexpr: Path to update
+        :type pathexpr: str
+        """
         return self('put', pathexpr)
 
     def delete(self, pathexpr):
+        """ Update DELETE method item for `pathexpr`.
+
+        :param pathexpr: Path to update
+        :type pathexpr: str
+        """
         return self('delete', pathexpr)
 
     def options(self, pathexpr):
+        """ Update OPTIONS method item for `pathexpr`.
+
+        :param pathexpr: Path to update
+        :type pathexpr: str
+        """
         return self('options', pathexpr)
 
     def head(self, pathexpr):
+        """ Update HEAD method item for `pathexpr`.
+
+        :param pathexpr: Path to update
+        :type pathexpr: str
+        """
         return self('head', pathexpr)
 
     def patch(self, pathexpr):
+        """ Update PATCH method item for `pathexpr`.
+
+        :param pathexpr: Path to update
+        :type pathexpr: str
+        """
         return self('patch', pathexpr)
 
 
 class ExceptionTree(RouteTree):
     def __call__(self, exc_cls):
         def _(f):
-            self.update(self.create_path(exc_cls), f, True)
+            self.update(self._create_path(exc_cls), f, True)
             return f
         return _
 
     def match(self, exc_cls):
-        return self.find(self.create_path(exc_cls), False)[0]
+        """ Returns matching item for `exc_cls`.
+
+        :param exc_cls: Exception class
+        :type exc_cls: class
+        """
+        return self.find(self._create_path(exc_cls), False)[0]
 
     def merge(self, tree):
+        """ Merges all items in `tree`.
+
+        :param tree: `ExceptionTree` to merge.
+        :type tree: mapletree.routetree.ExceptionTree
+        """
         for path, item in tree.items():
             self.update(path, item, True)
 
-    def create_path(self, exc_cls):
+    def _create_path(self, exc_cls):
         if exc_cls is Exception:
             return []
 
         else:
             super_cls = exc_cls.__bases__[0]
-            return self.create_path(super_cls) + [exc_cls.__name__]
+            return self._create_path(super_cls) + [exc_cls.__name__]

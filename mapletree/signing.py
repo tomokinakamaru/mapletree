@@ -13,11 +13,21 @@ class Signing(object):
         self._hash_f = hash_f
 
     def sign(self, data):
+        """ Create url-safe signed token.
+
+        :param data: Data to sign
+        :type data: object
+        """
         jsonstr = json.dumps(data, separators=(',', ':'))
         signature = self.create_signature(jsonstr)
         return self.b64encode(jsonstr + '.' + signature)
 
     def unsign(self, b64msg):
+        """ Retrieves data from signed token.
+
+        :param b64msg: Token to unsign
+        :type b64msg: str
+        """
         msg = self.b64decode(b64msg)
         try:
             body, signature = msg.rsplit('.', 1)
@@ -37,10 +47,20 @@ class Signing(object):
                 raise InvalidSignedMessage()
 
     def b64encode(self, msgstr):
+        """ URL-safe base64 encode.
+
+        :param msgstr: Message to encode
+        :type msgstr: str
+        """
         msg = msgstr.encode('utf8')
         return base64.urlsafe_b64encode(msg).rstrip(b'=').decode('utf8')
 
     def b64decode(self, b64msgstr):
+        """ URL-safe base64 decode.
+
+        :param msgstr: Token to decode
+        :type msgstr: str
+        """
         try:
             padding = (4 - len(b64msgstr) % 4) % 4
             b64msg = b64msgstr + '=' * padding
@@ -53,5 +73,10 @@ class Signing(object):
             raise InvalidSignedMessage()
 
     def create_signature(self, msgstr):
+        """ Create signature for `msgstr`.
+
+        :param msgstr: String to sign
+        :type msgstr: str
+        """
         b = msgstr.encode('utf8')
         return hmac.new(self._secret_key, b, self._hash_f).hexdigest()

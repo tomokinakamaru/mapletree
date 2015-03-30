@@ -27,7 +27,7 @@ class StageLocal(object):
 
     def __call__(self, f):
         """ Register creator functions for values.
-        The name of function will bew used as the name of values.
+        The name of function will be used as the name of values.
 
         :param f: Creator function
         :type f: callable

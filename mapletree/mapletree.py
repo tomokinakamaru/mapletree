@@ -9,16 +9,12 @@ from .response import Response
 from .driver import Driver
 from .exceptions import NoExceptionHandler, NotFound, MethodNotAllowed
 from .routetree import RequestTree, ExceptionTree
-from .stagelocal import StageLocal
-from .threadlocal import ThreadLocal
 
 
 class MapleTree(object):
     def __init__(self):
         self._request_tree = RequestTree()
         self._exception_tree = ExceptionTree()
-        self._config = StageLocal()
-        self._thread_specifics = ThreadLocal()
 
     def __call__(self, environ, start_response):
         try:
@@ -64,19 +60,6 @@ class MapleTree(object):
         `mapletree.routetree.ExceptionTree`.
         """
         return self._exception_tree
-
-    @property
-    def config(self):
-        """ Config instance, see detail at `mapletree.config.Config`.
-        """
-        return self._config
-
-    @property
-    def thread(self):
-        """ ThreadSpecifics instance, see detail at
-        `mapletree.threadspecifics.Threadspecifics`.
-        """
-        return self._thread_specifics
 
     def run(self, port=5000, background=False):
         """ Runs this application with builtin server for testing.

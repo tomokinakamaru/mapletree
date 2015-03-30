@@ -64,13 +64,3 @@ def _(e):
 @mt.exc(MethodNotAllowed)
 def _(e):
     return rsp().code(405)
-
-
-@mt.req.get('/config')
-def _(req):
-    return rsp().json(v=mt.config.value)
-
-
-@mt.req.get('/tss')
-def _(req):
-    return rsp().json(v=threading.current_thread() is mt.thread.threadid)

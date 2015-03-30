@@ -139,24 +139,6 @@ def test_location():
     assert r.status_code == 200
 
 
-def test_config():
-    mt.config.stage = 'development'
-    r = requests.get('http://localhost:5000/config')
-    assert r.status_code == 200
-    assert r.json() == {'v': 100}
-
-    mt.config.stage = 'production'
-    r = requests.get('http://localhost:5000/config')
-    assert r.status_code == 200
-    assert r.json() == {'v': 200}
-
-
-def test_tss():
-    r = requests.get('http://localhost:5000/tss')
-    assert r.status_code == 200
-    assert r.json() == {'v': True}
-
-
 def test_jsonencode():
     r = requests.get('http://localhost:5000/jsonencode')
     assert r.status_code == 200

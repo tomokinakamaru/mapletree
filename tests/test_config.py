@@ -9,11 +9,15 @@ class ConfigTest(object):
 
 
 def test_config():
-    ct = ConfigTest()
+    config = Config()
 
-    ct.config.load_package('test_config_pkg')
-    ct.config.stage = 'development'
-    assert ct.config.value == 100
+    @config
+    def value():
+        return {'development': 100,
+                'production': 200}
 
-    ct.config.stage = 'production'
-    assert ct.config.value == 200
+    config.stage = 'development'
+    assert config.value == 100
+
+    config.stage = 'production'
+    assert config.value == 200

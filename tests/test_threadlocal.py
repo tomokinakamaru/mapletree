@@ -3,8 +3,8 @@
 import pytest
 import threading
 import time
-from mapletree.threadlocal import (ThreadLocal,
-                                   UndefinedValueName)
+from mapletree.helpers.threadlocal import (ThreadLocal,
+                                           UndefinedValueName)
 
 
 tl = ThreadLocal()

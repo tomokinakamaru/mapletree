@@ -22,12 +22,6 @@ class ReadBodyTwiceError(Exception):
     pass
 
 
-class InvalidSignedMessage(Exception):
-    """ Raised when mapletree.Signing failed to decode a token.
-    """
-    pass
-
-
 class NoExceptionHandler(Exception):
     """ Raised when no exception handlers defined.
     """

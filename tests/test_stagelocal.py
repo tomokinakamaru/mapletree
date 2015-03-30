@@ -1,9 +1,9 @@
 # coding:utf-8
 
 import pytest
-from mapletree.stagelocal import (StageLocal,
-                                  UndefinedStageName,
-                                  UndefinedValueName)
+from mapletree.helpers.stagelocal import (StageLocal,
+                                          UndefinedStageName,
+                                          UndefinedValueName)
 
 
 def test_stagelocal():

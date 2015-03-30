@@ -1,8 +1,10 @@
 # coding:utf-8
 
 import pytest
-from mapletree.signing import Signing
-from mapletree.exceptions import InvalidSignedMessage
+from mapletree.helpers.signing import (Signing,
+                                       DataSignError,
+                                       MalformedSigendMessage,
+                                       BadSignature)
 
 
 @pytest.mark.parametrize('data',
@@ -12,6 +14,13 @@ from mapletree.exceptions import InvalidSignedMessage
 def test_signing(data):
     signing = Signing('secret_key')
     assert signing.unsign(signing.sign(data)) == data
+    signing = Signing(b'secret_key')
+    assert signing.unsign(signing.sign(data)) == data
+
+
+def test_unserializable():
+    signing = Signing('secret_key')
+    pytest.raises(DataSignError, signing.sign, object())
 
 
 def test_invalid_signed_msg():
@@ -24,15 +33,15 @@ def test_invalid_signed_msg():
     signedmsg2 = signing.sign(data2)
     body2, signature2 = signing.b64decode(signedmsg2).rsplit('.', 1)
 
-    pytest.raises(InvalidSignedMessage, signing.unsign, '---')
-    pytest.raises(InvalidSignedMessage, signing.unsign, None)
+    pytest.raises(MalformedSigendMessage, signing.unsign, '---')
+    pytest.raises(MalformedSigendMessage, signing.unsign, None)
 
     token = signing.b64encode(body1 + signature2)
-    pytest.raises(InvalidSignedMessage, signing.unsign, token)
+    pytest.raises(MalformedSigendMessage, signing.unsign, token)
 
     token = signing.b64encode(body1 + '.' + signature2)
-    pytest.raises(InvalidSignedMessage, signing.unsign, token)
+    pytest.raises(BadSignature, signing.unsign, token)
 
     signature3 = signing.create_signature('{a}')
     token = signing.b64encode('{a}.' + signature3)
-    pytest.raises(InvalidSignedMessage, signing.unsign, token)
+    pytest.raises(MalformedSigendMessage, signing.unsign, token)

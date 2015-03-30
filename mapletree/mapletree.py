@@ -6,10 +6,10 @@ from importlib import import_module
 from pkgutil import iter_modules
 from .request import Request
 from .response import Response
-from .config import Config
 from .driver import Driver
 from .exceptions import NoExceptionHandler, NotFound, MethodNotAllowed
 from .routetree import RequestTree, ExceptionTree
+from .stagelocal import StageLocal
 from .threadspecifics import ThreadSpecifics
 
 
@@ -17,7 +17,7 @@ class MapleTree(object):
     def __init__(self):
         self._request_tree = RequestTree()
         self._exception_tree = ExceptionTree()
-        self._config = Config()
+        self._config = StageLocal()
         self._thread_specifics = ThreadSpecifics()
 
     def __call__(self, environ, start_response):

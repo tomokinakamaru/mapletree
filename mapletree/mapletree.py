@@ -10,7 +10,7 @@ from .driver import Driver
 from .exceptions import NoExceptionHandler, NotFound, MethodNotAllowed
 from .routetree import RequestTree, ExceptionTree
 from .stagelocal import StageLocal
-from .threadspecifics import ThreadSpecifics
+from .threadlocal import ThreadLocal
 
 
 class MapleTree(object):
@@ -18,7 +18,7 @@ class MapleTree(object):
         self._request_tree = RequestTree()
         self._exception_tree = ExceptionTree()
         self._config = StageLocal()
-        self._thread_specifics = ThreadSpecifics()
+        self._thread_specifics = ThreadLocal()
 
     def __call__(self, environ, start_response):
         try:

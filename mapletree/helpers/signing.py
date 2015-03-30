@@ -97,20 +97,30 @@ def to_byte_string(s):
 
 
 class SigningException(Exception):
+    """ Base exception for `Signing`.
+    """
     pass
 
 
 class DataSignError(SigningException):
+    """ Exception for signing error.
+    """
     pass
 
 
 class DataUnsignError(SigningException):
+    """ Exception for unsignin error.
+    """
     pass
 
 
 class MalformedSigendMessage(DataUnsignError):
+    """ Exception for malformed token.
+    """
     pass
 
 
 class BadSignature(DataUnsignError):
+    """ Exception for unmaching signature.
+    """
     pass

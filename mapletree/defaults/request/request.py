@@ -2,6 +2,7 @@
 
 import cgi
 import json
+import sys
 from mapletree import compat
 from .argcontainer import ArgContainer
 
@@ -10,6 +11,8 @@ class Request(object):
     _arg_container = ArgContainer
 
     def __init__(self, environ, extra):
+        sys.stdout = environ.get('wsgi.errors')
+        sys.stderr = environ.get('wsgi.errors')
         self._environ = environ
         self._extra = self._arg_container(extra)
         self._body = None

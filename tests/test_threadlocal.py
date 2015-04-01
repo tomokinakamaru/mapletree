@@ -1,14 +1,16 @@
 # coding:utf-8
 
+import pytest
 import threading
 import time
-from mapletree.threadspecifics import ThreadSpecifics
+from mapletree.helpers.threadlocal import (ThreadLocal,
+                                           UndefinedValueName)
 
 
-ts = ThreadSpecifics()
+tl = ThreadLocal()
 
 
-@ts
+@tl
 def tlocal():
     return threading.current_thread()
 
@@ -20,10 +22,11 @@ def test_thread_specifics():
     def f():
         global subthread_success
         try:
-            assert ts.tlocal == threading.current_thread()
-            assert ts.tlocal == threading.current_thread()
+            assert tl.tlocal == threading.current_thread()
+            assert tl.tlocal == threading.current_thread()
+            pytest.raises(UndefinedValueName, lambda: tl.value)
 
-        except AssertionError:
+        except:
             subthread_success = False
 
         else:

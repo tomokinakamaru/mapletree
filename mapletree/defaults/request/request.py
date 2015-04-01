@@ -8,13 +8,13 @@ from .argcontainer import ArgContainer
 
 
 class Request(object):
-    _arg_container = ArgContainer
+    arg_container = ArgContainer
 
     def __init__(self, environ, extra):
         sys.stdout = environ.get('wsgi.errors')
         sys.stderr = environ.get('wsgi.errors')
         self._environ = environ
-        self._extra = self._arg_container(extra)
+        self._extra = self.arg_container(extra)
         self._body = None
         self._fieldstorage = None
         self._params = None
@@ -74,7 +74,7 @@ class Request(object):
         """ Parsed query string.
         """
         if self._params is None:
-            self._params = self._arg_container()
+            self._params = self.arg_container()
 
             data = compat.parse_qs(self.environ('QUERY_STRING') or '')
             for k, v in data.items():
@@ -93,7 +93,7 @@ class Request(object):
         """ Cookie values.
         """
         if self._cookie is None:
-            self._cookie = self._arg_container()
+            self._cookie = self.arg_container()
 
             data = compat.parse_qs(self.http_header('cookie') or '')
             for k, v in data.items():
@@ -106,7 +106,7 @@ class Request(object):
         """ Values in request body.
         """
         if self._data is None:
-            self._data = self._arg_container()
+            self._data = self.arg_container()
 
             if isinstance(self.fieldstorage.value, list):
                 for k in self.fieldstorage.keys():

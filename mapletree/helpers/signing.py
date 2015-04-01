@@ -4,7 +4,7 @@ import base64
 import hashlib
 import hmac
 import json
-import sys
+from mapletree import compat
 
 
 class Signing(object):
@@ -16,7 +16,7 @@ class Signing(object):
         :type secret_key: str
         :type hash_f: callable
         """
-        self._secret_key = to_byte_string(secret_key)
+        self._secret_key = compat.non_unicode_str(secret_key)
         self._hash_f = hash_f
 
     def sign(self, data):
@@ -32,8 +32,8 @@ class Signing(object):
             raise DataSignError(e.args[0])
 
         else:
-            signature = self.create_signature(jsonstr)
-            return self.b64encode(jsonstr + '.' + signature)
+            signature = self._create_signature(jsonstr)
+            return self._b64encode(jsonstr + '.' + signature)
 
     def unsign(self, b64msg):
         """ Retrieves data from signed token.
@@ -41,7 +41,7 @@ class Signing(object):
         :param b64msg: Token to unsign
         :type b64msg: str
         """
-        msg = self.b64decode(b64msg)
+        msg = self._b64decode(b64msg)
         try:
             body, signature = msg.rsplit('.', 1)
 
@@ -49,7 +49,7 @@ class Signing(object):
             raise MalformedSigendMessage(e.args[0])
 
         else:
-            if signature == self.create_signature(body):
+            if signature == self._create_signature(body):
                 try:
                     return json.loads(body)
 
@@ -59,41 +59,22 @@ class Signing(object):
             else:
                 raise BadSignature()
 
-    def b64encode(self, msgstr):
-        msg = to_byte_string(msgstr)
+    def _b64encode(self, msgstr):
+        msg = compat.non_unicode_str(msgstr)
         return base64.urlsafe_b64encode(msg).rstrip(b'=').decode('utf8')
 
-    def b64decode(self, b64msgstr):
+    def _b64decode(self, b64msgstr):
         try:
             padding = (4 - len(b64msgstr) % 4) % 4
-            b64msg = to_byte_string(b64msgstr + '=' * padding)
+            b64msg = compat.non_unicode_str(b64msgstr + '=' * padding)
             return base64.urlsafe_b64decode(b64msg).decode('utf8')
 
         except (TypeError, UnicodeDecodeError) as e:
             raise MalformedSigendMessage(e.args[0])
 
-    def create_signature(self, msgstr):
-        b = to_byte_string(msgstr)
+    def _create_signature(self, msgstr):
+        b = compat.non_unicode_str(msgstr)
         return hmac.new(self._secret_key, b, self._hash_f).hexdigest()
-
-
-is_py3 = sys.version_info[0] == 3
-
-
-def to_byte_string(s):
-    if is_py3:
-        if isinstance(s, str):
-            return s.encode('utf8')
-
-        else:
-            return s
-
-    else:
-        if isinstance(s, unicode):
-            return s.encode('utf8')
-
-        else:
-            return s
 
 
 class SigningException(Exception):

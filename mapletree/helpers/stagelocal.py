@@ -6,6 +6,16 @@ class StageLocal(object):
         self._data = {}
         self.stage = None
 
+    def __call__(self, f):
+        """ Register creator functions for values.
+        The name of function will be used as the name of values.
+
+        :param f: Creator function
+        :type f: callable
+        """
+        self._data.setdefault(f.__name__, {}).update(f())
+        return f
+
     def __getattr__(self, name):
         """ Returns stage local value for `name`.
 
@@ -24,16 +34,6 @@ class StageLocal(object):
 
             except KeyError as e:
                 raise UndefinedStageName(e.args[0])
-
-    def __call__(self, f):
-        """ Register creator functions for values.
-        The name of function will be used as the name of values.
-
-        :param f: Creator function
-        :type f: callable
-        """
-        self._data.setdefault(f.__name__, {}).update(f())
-        return f
 
 
 class StageLocalException(Exception):

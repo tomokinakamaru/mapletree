@@ -1,7 +1,7 @@
 # coding:utf-8
 
 import json
-from datetime import datetime
+from datetime import date, datetime
 from time import mktime
 from wsgiref.handlers import format_date_time
 from . import compat
@@ -22,7 +22,7 @@ class Response(Exception):
                 headerlist.append((k, e))
 
         start_response(status, headerlist)
-        return compat.response_body(self._body)
+        return [compat.non_unicode_str(self._body)]
 
     def error(self):
         """ Raises `self`. This is a shortcut method for exiting endpoint.
@@ -101,7 +101,8 @@ class Response(Exception):
         ls = ['{}={}'.format(k, v)]
 
         if expires is not None:
-            ls.append('expires={}'.format(_httpdate(expires)))
+            dt = format_date_time(mktime(expires.timetuple()))
+            ls.append('expires={}'.format(dt))
 
         if domain is not None:
             ls.append('domain={}'.format(domain))
@@ -122,15 +123,6 @@ class Response(Exception):
         """
         return self.cookie(k, '', datetime.fromtimestamp(0))
 
-    def json(self, **kwargs):
-        """ Sets content type `application/json` and
-        fills body with json encoded string.
-
-        :param kwargs: Values for body
-        :type kwargs: mapping
-        """
-        return self.ctype('application/json').body(_jsonencode(kwargs))
-
     def html(self, b):
         """ Sets content type `text/html` and body to `b`'.
 
@@ -139,26 +131,34 @@ class Response(Exception):
         """
         return self.ctype('text/html').body(b)
 
+    def json(self, **kwargs):
+        """ Sets content type `application/json` and
+        fills body with json encoded string.
 
-def _jsonencode(obj):
-    return json.dumps(obj, separators=(',', ':'), default=_jsondefault)
+        :param kwargs: Values for body
+        :type kwargs: mapping
+        """
+        return self.ctype('application/json').body(self._jsonencode(kwargs))
 
+    def _jsonencode(self, obj):
+        return json.dumps(obj,
+                          separators=(',', ':'),
+                          default=self._jsondefault)
 
-def _jsondefault(obj):
-    if isinstance(obj, datetime):
-        return _httpdate(obj)
+    def _jsondefault(self, obj):
+        if isinstance(obj, datetime):
+            return obj.strftime('%Y/%m/%d %H:%M:%S')
 
-    if isinstance(obj, (bytes, bytearray)):
-        return str(obj)
+        if isinstance(obj, date):
+            return obj.strftime('%Y/%m/%d')
 
-    if isinstance(obj, set):
-        return [e for e in obj]
+        if isinstance(obj, (bytes, bytearray)):
+            return obj.decode('utf8')
 
-    raise TypeError('{} is not JSON serializable'.format(obj))
+        if isinstance(obj, set):
+            return [e for e in obj]
 
-
-def _httpdate(dt):
-    return format_date_time(mktime(dt.timetuple()))
+        raise TypeError('{} is not JSON serializable'.format(obj))
 
 
 STATUS_PHRASES = {

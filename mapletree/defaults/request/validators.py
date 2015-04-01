@@ -4,37 +4,6 @@ import re
 from datetime import datetime as stdlib_datetime
 
 
-def _inrange(num, minimum, maximum, inf, sup):
-    if _is_larger(num, minimum, inf) and _is_smaller(num, maximum, sup):
-        return num
-
-    raise ValueError('Out of range')
-
-
-def _is_larger(num, minimum, inf):
-    if minimum is None:
-        if inf is None:
-            return True
-
-        else:
-            return inf < num
-
-    else:
-        return minimum <= num
-
-
-def _is_smaller(num, maximum, sup):
-    if maximum is None:
-        if sup is None:
-            return True
-
-        else:
-            return num < sup
-
-    else:
-        return num <= maximum
-
-
 def int_range(string, minimum, maximum):
     """ Requires values to be an integer and in [`minimum`, `maximum`]
 
@@ -262,7 +231,7 @@ def csv_int(string):
     :param string: Source string.
     :type string: str
     """
-    return [int(e.strip()) for e in string.split(',')]
+    return [int(e) for e in csv(string)]
 
 
 def csv_float(string):
@@ -271,29 +240,60 @@ def csv_float(string):
     :param string: Source string.
     :type string: str
     """
-    return [float(e.strip()) for e in string.split(',')]
+    return [float(e) for e in csv(string)]
 
 
-def option(string, *args):
+def option(string, options):
     """ Requires values to be in `args`
 
     :param string: Value to validate
     :type string: str
     """
-    if string in args:
+    if string in options:
         return string
 
     raise ValueError('Not in allowed options')
 
 
-def int_option(string, *args):
+def int_option(string, options):
     """ Requires values (int) to be in `args`
 
     :param string: Value to validate
     :type string: str
     """
     i = int(string)
-    if i in args:
+    if i in options:
         return i
 
     raise ValueError('Not in allowed options')
+
+
+def _inrange(num, minimum, maximum, inf, sup):
+    if _is_larger(num, minimum, inf) and _is_smaller(num, maximum, sup):
+        return num
+
+    raise ValueError('Out of range')
+
+
+def _is_larger(num, minimum, inf):
+    if minimum is None:
+        if inf is None:
+            return True
+
+        else:
+            return inf < num
+
+    else:
+        return minimum <= num
+
+
+def _is_smaller(num, maximum, sup):
+    if maximum is None:
+        if sup is None:
+            return True
+
+        else:
+            return num < sup
+
+    else:
+        return num <= maximum

@@ -28,20 +28,20 @@ def test_invalid_signed_msg():
     data1, data2 = {'x': 1}, [1, 2]
 
     signedmsg1 = signing.sign(data1)
-    body1, signature1 = signing.b64decode(signedmsg1).rsplit('.', 1)
+    body1, signature1 = signing._b64decode(signedmsg1).rsplit('.', 1)
 
     signedmsg2 = signing.sign(data2)
-    body2, signature2 = signing.b64decode(signedmsg2).rsplit('.', 1)
+    body2, signature2 = signing._b64decode(signedmsg2).rsplit('.', 1)
 
     pytest.raises(MalformedSigendMessage, signing.unsign, '---')
     pytest.raises(MalformedSigendMessage, signing.unsign, None)
 
-    token = signing.b64encode(body1 + signature2)
+    token = signing._b64encode(body1 + signature2)
     pytest.raises(MalformedSigendMessage, signing.unsign, token)
 
-    token = signing.b64encode(body1 + '.' + signature2)
+    token = signing._b64encode(body1 + '.' + signature2)
     pytest.raises(BadSignature, signing.unsign, token)
 
-    signature3 = signing.create_signature('{a}')
-    token = signing.b64encode('{a}.' + signature3)
+    signature3 = signing._create_signature('{a}')
+    token = signing._b64encode('{a}.' + signature3)
     pytest.raises(MalformedSigendMessage, signing.unsign, token)

@@ -8,6 +8,16 @@ class ThreadLocal(object):
         self._threadlocal = threading.local()
         self._funcs = {}
 
+    def __call__(self, f):
+        """ Register creator functions for values.
+        The name of function will be used as the name of values.
+
+        :param f: Creator function
+        :type f: callable
+        """
+        self._funcs[f.__name__] = f
+        return f
+
     def __getattr__(self, name):
         """ Returns thread local value for `name`.
 
@@ -28,16 +38,6 @@ class ThreadLocal(object):
                 obj = f()
                 setattr(self._threadlocal, name, obj)
                 return obj
-
-    def __call__(self, f):
-        """ Register creator functions for values.
-        The name of function will be used as the name of values.
-
-        :param f: Creator function
-        :type f: callable
-        """
-        self._funcs[f.__name__] = f
-        return f
 
 
 class ThreadLocalException(Exception):

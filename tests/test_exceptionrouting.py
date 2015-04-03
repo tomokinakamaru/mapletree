@@ -1,8 +1,9 @@
 # coding:utf-8
 
 import pytest
-from mapletree.defaults.routings import (ExceptionRouting,
-                                         NoExceptionHandler)
+from mapletree.defaults.routings.exceptionrouting import (
+        ExceptionRouting,
+        NoExceptionHandler)
 
 
 def test_basics():

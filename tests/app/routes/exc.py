@@ -2,7 +2,7 @@
 
 from app.app import mt
 from mapletree import rsp
-from mapletree.defaults.routings import NotFound
+from mapletree.defaults.routings.requestrouting import NotFound
 
 
 @mt.exc.route(Exception)

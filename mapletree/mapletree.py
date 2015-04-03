@@ -7,8 +7,9 @@ from importlib import import_module
 from pkgutil import iter_modules
 from threading import Thread
 from .driver import Driver
-from .defaults.request import Request
-from .defaults.routings import RequestRouting, ExceptionRouting
+from .defaults.request.request import Request
+from .defaults.routings.requestrouting import RequestRouting
+from .defaults.routings.exceptionrouting import ExceptionRouting
 
 
 class MapleTree(object):

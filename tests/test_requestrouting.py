@@ -1,9 +1,9 @@
 # coding:utf-8
 
 import pytest
-from mapletree.defaults.routings import (RequestRouting,
-                                         NotFound,
-                                         MethodNotAllowed)
+from mapletree.defaults.routings.requestrouting import (RequestRouting,
+                                                        NotFound,
+                                                        MethodNotAllowed)
 
 
 @pytest.mark.parametrize('method', ['get', 'post', 'put', 'delete',

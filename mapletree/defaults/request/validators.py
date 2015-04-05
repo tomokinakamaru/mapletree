@@ -268,11 +268,11 @@ def int_option(string, options):
     raise ValueError('Not in allowed options')
 
 
-def file(v, allowed_exts):
+def file(v, allowed_exts=None):
     if isinstance(v, tuple):
         fname, fp = v
         ext = fname.rsplit('.', 1)[-1]
-        if ext in allowed_exts:
+        if allowed_exts is None or ext in allowed_exts:
             return fname, fp
 
         raise TypeError('Invalid file')

@@ -98,3 +98,11 @@ def test_option():
 def test_int_option():
     assert V.int_option('1', [1, 2]) == 1
     pytest.raises(Exception, V.int_option, '3', [1, 2])
+
+
+def test_file():
+    with open('README.rst') as fp:
+        v = ('README.rst', fp)
+        assert V.file(v, 'rst') == v
+        pytest.raises(Exception, V.file, v, 'txt')
+        pytest.raises(Exception, V.file, 'test', 'aaa')

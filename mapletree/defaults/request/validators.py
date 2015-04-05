@@ -268,6 +268,18 @@ def int_option(string, options):
     raise ValueError('Not in allowed options')
 
 
+def file(v, allowed_exts):
+    if isinstance(v, tuple):
+        fname, fp = v
+        ext = fname.rsplit('.', 1)[-1]
+        if ext in allowed_exts:
+            return fname, fp
+
+        raise TypeError('Invalid file')
+
+    raise TypeError('Not a file')
+
+
 def _inrange(num, minimum, maximum, inf, sup):
     if _is_larger(num, minimum, inf) and _is_smaller(num, maximum, sup):
         return num

@@ -50,3 +50,11 @@ def test_read_twice():
 def test_extra():
     c = Client()
     assert c('get', '/extra/abc').json() == {'label': 'abc'}
+
+
+def test_files():
+    c = Client()
+    with open('README.rst') as readme, open('LICENSE') as license:
+        r = c('post', '/files', files={'f1': readme, 'f2': license})
+        assert r.status_code == 200
+        assert r.json() == {'f1': 'README.rst', 'f2': 'LICENSE'}

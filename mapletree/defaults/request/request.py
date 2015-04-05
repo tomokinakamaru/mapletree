@@ -110,8 +110,9 @@ class Request(object):
 
             if isinstance(self.fieldstorage.value, list):
                 for k in self.fieldstorage.keys():
-                    if self.fieldstorage[k].filename:
-                        self._data[k] = self.fieldstorage[k].file
+                    fname = self.fieldstorage[k].filename
+                    if fname:
+                        self._data[k] = (fname, self.fieldstorage[k].file)
 
                     else:
                         self._data[k] = self.fieldstorage.getfirst(k)

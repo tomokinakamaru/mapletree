@@ -36,3 +36,9 @@ def _(req):
 @mt.req.get('/extra/:label')
 def _(req):
     return rsp().json(**req.extra)
+
+
+@mt.req.post('/files')
+def _(req):
+    return rsp().json(**{'f1': req.data('f1')[0],
+                         'f2': req.data('f2')[0]})

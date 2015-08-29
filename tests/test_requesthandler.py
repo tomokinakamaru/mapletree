@@ -1,15 +1,15 @@
 # coding:utf-8
 
 import pytest
-from mapletree.defaults.routings.requestrouting import (RequestRouting,
-                                                        NotFound,
-                                                        MethodNotAllowed)
+from mapletree.requesthandler import (RequestHandler,
+                                      NotFound,
+                                      MethodNotAllowed)
 
 
 @pytest.mark.parametrize('method', ['get', 'post', 'put', 'delete',
                                     'head', 'options', 'patch'])
 def test_basics(method):
-    rr = RequestRouting()
+    rr = RequestHandler()
     f = getattr(rr, method)
 
     @f('/')
@@ -21,13 +21,13 @@ def test_basics(method):
 
 
 def test_not_found():
-    rr = RequestRouting()
+    rr = RequestHandler()
     environ = {'REQUEST_METHOD': 'GET', 'PATH_INFO': '/'}
     pytest.raises(NotFound, rr, environ)
 
 
 def test_method_not_allowed():
-    rr = RequestRouting()
+    rr = RequestHandler()
 
     @rr.post('/')
     def endpoint():
@@ -38,7 +38,7 @@ def test_method_not_allowed():
 
 
 def test_merge():
-    rr1, rr2 = RequestRouting(), RequestRouting()
+    rr1, rr2 = RequestHandler(), RequestHandler()
 
     @rr1.get('/')
     def endpoint1():
@@ -48,9 +48,15 @@ def test_merge():
     def endpoint2():
         pass
 
+    @rr2.put('/:a')
+    def endpoint3():
+        pass
+
     rr1.merge(rr2)
 
     environ = {'REQUEST_METHOD': 'GET', 'PATH_INFO': '/'}
     assert rr1(environ) == (endpoint1, {})
     environ = {'REQUEST_METHOD': 'POST', 'PATH_INFO': '/'}
     assert rr1(environ) == (endpoint2, {})
+    environ = {'REQUEST_METHOD': 'PUT', 'PATH_INFO': '/x'}
+    assert rr1(environ) == (endpoint3, {'a': 'x'})

@@ -2,14 +2,16 @@
 
 from app.app import mt
 from mapletree import rsp
-from mapletree.defaults.routings.requestrouting import NotFound
+from mapletree.requesthandler import NotFound
 
 
-@mt.exc.route(Exception)
+@mt.exc.add(Exception)
 def _(e):
+    import traceback
+    traceback.print_exc()
     return rsp().code(500)
 
 
-@mt.exc.route(NotFound)
+@mt.exc.add(NotFound)
 def _(e):
     return rsp().code(404)

@@ -30,6 +30,9 @@ setup(
         'Topic :: Software Development :: Libraries :: Python Modules'
     ],
     description='WSGI app framework',
+    install_requires=[
+        'dictree==1.0.0'
+    ],
     license='MIT',
     long_description=long_description,
     name='mapletree',

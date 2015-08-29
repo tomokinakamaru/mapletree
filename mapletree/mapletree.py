@@ -8,15 +8,15 @@ from pkgutil import iter_modules
 from threading import Thread
 from .driver import Driver
 from .defaults.request.request import Request
-from .defaults.routings.requestrouting import RequestRouting
-from .defaults.routings.exceptionrouting import ExceptionRouting
+from .exceptionhandler import ExceptionHandler
+from .requesthandler import RequestHandler
 
 
 class MapleTree(object):
     def __init__(self,
                  request=Request,
-                 request_routing=RequestRouting(),
-                 exception_routing=ExceptionRouting()):
+                 request_routing=RequestHandler(),
+                 exception_routing=ExceptionHandler()):
         self._request_routing = request_routing
         self._exception_routing = exception_routing
         self._autoloads = []

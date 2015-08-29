@@ -1,15 +1,14 @@
 # coding:utf-8
 
 import pytest
-from mapletree.defaults.routings.exceptionrouting import (
-        ExceptionRouting,
-        NoExceptionHandler)
+from mapletree.exceptionhandler import (ExceptionHandler,
+                                        NoExceptionHandler)
 
 
 def test_basics():
-    er = ExceptionRouting()
+    er = ExceptionHandler()
 
-    @er.route(TypeError)
+    @er.add(TypeError)
     def ehandler(e):
         pass
 
@@ -17,13 +16,13 @@ def test_basics():
 
 
 def test_merge():
-    er1, er2 = ExceptionRouting(), ExceptionRouting()
+    er1, er2 = ExceptionHandler(), ExceptionHandler()
 
-    @er1.route(TypeError)
+    @er1.add(TypeError)
     def ehandler1(e):
         pass
 
-    @er2.route(ValueError)
+    @er2.add(ValueError)
     def ehandler2(e):
         pass
 
@@ -33,5 +32,5 @@ def test_merge():
 
 
 def test_no_exc_handler():
-    er = ExceptionRouting()
+    er = ExceptionHandler()
     pytest.raises(NoExceptionHandler, er, Exception())

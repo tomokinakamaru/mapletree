@@ -31,7 +31,7 @@ setup(
     ],
     description='WSGI app framework',
     install_requires=[
-        'dictree==1.0.0'
+        'dictree==1.1.0'
     ],
     license='MIT',
     long_description=long_description,

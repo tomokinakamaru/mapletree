@@ -34,7 +34,7 @@ class RequestHandler(object):
             raise NotFound(path)
 
         else:
-            method = environ['REQUEST_METHOD'].upper()
+            method = environ['REQUEST_METHOD']
             if method not in funcs:
                 raise MethodNotAllowed(method, path)
 

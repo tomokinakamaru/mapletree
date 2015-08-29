@@ -11,36 +11,34 @@ class ExceptionHandler(object):
     def tree(self):
         return self._tree
 
-    @classmethod
-    def parse_exc(cls, exc_cls):
+    @staticmethod
+    def parse_exc(exc_cls):
         if exc_cls is Exception:
             return ()
 
         else:
             super_cls = exc_cls.__bases__[0]
-            return cls.parse_exc(super_cls) + (exc_cls,)
+            return ExceptionHandler.parse_exc(super_cls) + (exc_cls,)
 
     def __call__(self, exc):
         key = self.parse_exc(exc.__class__)
-
         try:
             f, _ = self.tree.find(key)
 
         except KeyError:
             raise NoExceptionHandler()
 
-        return f
+        else:
+            return f
 
     def add(self, exc_cls):
         def _(f):
-            key = self.parse_exc(exc_cls)
-            self.tree[key] = f
+            self.tree[self.parse_exc(exc_cls)] = f
             return f
         return _
 
     def merge(self, handler):
-        for key, f in handler.tree.items():
-            self.add(key[-1])(f)
+        self.tree.update(handler.tree)
 
 
 class NoExceptionHandler(Exception):

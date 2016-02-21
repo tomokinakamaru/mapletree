@@ -2,6 +2,9 @@
 MapleTree
 =========
 
+.. image:: ./docs/_static/logo.png
+    :alt: MapleTree logo
+
 .. image:: https://travis-ci.org/tomokinakamaru/mapletree.svg?branch=master
     :target: https://travis-ci.org/tomokinakamaru/mapletree
     :alt: MapleTree Build

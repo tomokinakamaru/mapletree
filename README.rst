@@ -1,7 +1,3 @@
-=========
-MapleTree
-=========
-
 .. image:: ./docs/_static/logo.png
     :alt: MapleTree logo
 

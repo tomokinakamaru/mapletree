@@ -5,27 +5,28 @@ import os
 import sys
 from importlib import import_module
 from pkgutil import iter_modules
+from rexy import Rexy
 from threading import Thread
 from .driver import Driver
-from .defaults.request.request import Request
 from .exceptionhandler import ExceptionHandler
 from .requesthandler import RequestHandler
 
 
 class MapleTree(object):
     def __init__(self,
-                 request=Request,
+                 request=Rexy,
                  request_routing=RequestHandler(),
                  exception_routing=ExceptionHandler()):
+        self._request = request
         self._request_routing = request_routing
         self._exception_routing = exception_routing
         self._autoloads = []
 
     def __call__(self, environ, start_response):
         try:
-            f, extra = self._request_routing(environ)
-            request = Request(environ, extra)
-            response = f(request)
+            f, path_params = self._request_routing(environ)
+            request = self._request(environ)
+            response = f(path_params, request)
             return response(start_response)
 
         except Exception as e:
